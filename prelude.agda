@@ -8,8 +8,8 @@ n + (S m) = S (n + m)
 
 infixl 5 _+_
 
-{-# BUILTIN NATURAL ℕ #-}
 
+{-# BUILTIN NATURAL ℕ #-}
 
 data _===_ {T : Set} (x : T) : T → Set where
     refl : x === x
@@ -28,20 +28,15 @@ data Bool : Set where
     true : Bool
     false : Bool
 
+NatEq : ℕ → ℕ → Bool
+NatEq 0 0 = true
+NatEq 0 (S n) = false
+NatEq (S n) 0 = false
+NatEq (S n) (S m) = NatEq n m
 
-BBeq' : Bool → Bool → Bool
-BBeq' true true = true
-BBeq' true false = false
-BBeq' false true = false
-BBeq' false false = true
-
-record Beq {T : Set} : Set where
-    field
-        _==_ : T → T → Bool
-
-instance
-    BoolBeq 
-    _==_ {{BoolBeq}}
+_❔_∴_ : {T : Set} → Bool → T → T → T
+true ❔ x ∴ y = x
+false ❔ x ∴ y = y
 
 data List (T : Set) : Set where
     [] : List T
@@ -49,13 +44,16 @@ data List (T : Set) : Set where
 
 infixr 4 _::_
 
+_++_ : {T : Set} → List T → List T → List T
+[] ++ x = x
+(x :: xt) ++ y = x :: (xt ++ y)
+
+data _∈_ : {T : Set} → T → List T → Set where
+    x ∈ (y ∈ yt) 
+
 {-# BUILTIN LIST List #-}
 
-postulate Char : Set
-{-# BUILTIN CHAR Char #-}
 
-postulate String : Set
-{-# BUILTIN STRING String #-}
 {-
 test : ℕ → ℕ → ℕ
 --test m n = n
